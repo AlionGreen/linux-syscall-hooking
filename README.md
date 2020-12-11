@@ -15,6 +15,6 @@ linux# export LD_PRELOAD=$(pwd)/mallib.so
 ## how it works:
 when you ssh with user ```whatsupali``` to infected host it opens a bind shell on port 65236 and hides connections to this port from netstat. it also hides it self from ```ls``` command. 
 
-##credit
+## credit
 Thanks [h0mbre](https://twitter.com/h0mbre_) for his great blog post.
 [Creating a Rootkit to Learn C](https://h0mbre.github.io/Learn-C-By-Creating-A-Rootkit/)
